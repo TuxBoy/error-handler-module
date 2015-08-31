@@ -7,7 +7,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Whoops\Handler\PrettyPageHandler;
 use Whoops\Run;
 
-class WhoopsMiddleware
+class ErrorHandlerMiddleware
 {
     private $whoops;
 
