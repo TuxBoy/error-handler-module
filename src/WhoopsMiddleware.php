@@ -1,6 +1,6 @@
 <?php
 
-namespace Stratify\WhoopsModule;
+namespace Stratify\ErrorHandlerModule;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

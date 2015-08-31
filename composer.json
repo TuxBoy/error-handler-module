@@ -1,10 +1,10 @@
 {
-    "name": "stratify/whoops-module",
+    "name": "stratify/error-handler-module",
     "license": "MIT",
     "type": "library",
     "autoload": {
         "psr-4": {
-            "Stratify\\WhoopsModule\\": "src/"
+            "Stratify\\ErrorHandlerModule\\": "src/"
         }
     },
     "require": {
