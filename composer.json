@@ -1,0 +1,15 @@
+{
+    "name": "stratify/whoops-module",
+    "license": "MIT",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Stratify\\WhoopsModule\\": "src/"
+        }
+    },
+    "require": {
+        "psr/http-message": "^1.0",
+        "filp/whoops": "^1.1",
+        "php-di/php-di": "^5.0"
+    }
+}
