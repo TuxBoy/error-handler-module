@@ -30,7 +30,8 @@ class ErrorHandlerMiddleware
             $output = $this->whoops->handleException($e);
 
             $response->getBody()->write($output);
-            return $response;
+
+            return $response->withStatus(500);
         }
     }
 }
