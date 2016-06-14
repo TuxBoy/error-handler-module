@@ -6,6 +6,7 @@ use DI\ContainerBuilder;
 use Psr\Log\AbstractLogger;
 use Psr\Log\NullLogger;
 use Stratify\ErrorHandlerModule\ErrorHandlerMiddleware;
+use Stratify\ErrorHandlerModule\ErrorResponder\SimpleProductionResponder;
 use Whoops\Run;
 use Zend\Diactoros\Request;
 use Zend\Diactoros\Response;
@@ -32,7 +33,7 @@ class ErrorHandlerMiddlewareTest extends \PHPUnit_Framework_TestCase
      */
     public function sets_http_status_to_500()
     {
-        $middleware = new ErrorHandlerMiddleware(new Run, new NullLogger);
+        $middleware = new ErrorHandlerMiddleware(new SimpleProductionResponder, new NullLogger);
         $response = $middleware->__invoke(new ServerRequest, new Response, function () {
             throw new \Exception('Hello world');
         });
@@ -73,7 +74,7 @@ class ErrorHandlerMiddlewareTest extends \PHPUnit_Framework_TestCase
             }
         };
 
-        $middleware = new ErrorHandlerMiddleware(new Run, $logger);
+        $middleware = new ErrorHandlerMiddleware(new SimpleProductionResponder, $logger);
         $middleware->__invoke(new ServerRequest, new Response, function () {
             throw new \Exception('Hello world');
         });

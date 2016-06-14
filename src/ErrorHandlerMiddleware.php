@@ -5,7 +5,7 @@ namespace Stratify\ErrorHandlerModule;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
-use Whoops\Run;
+use Stratify\ErrorHandlerModule\ErrorResponder\ErrorResponder;
 
 /**
  * Middleware that catches errors in the next middlewares to display them with a nice error page.
@@ -15,18 +15,18 @@ use Whoops\Run;
 class ErrorHandlerMiddleware
 {
     /**
-     * @var Run
+     * @var ErrorResponder
      */
-    private $whoops;
+    private $responder;
 
     /**
      * @var LoggerInterface
      */
     private $logger;
 
-    public function __construct(Run $whoops, LoggerInterface $logger)
+    public function __construct(ErrorResponder $responder, LoggerInterface $logger)
     {
-        $this->whoops = $whoops;
+        $this->responder = $responder;
         $this->logger = $logger;
     }
 
@@ -43,10 +43,7 @@ class ErrorHandlerMiddleware
                 'exception' => $e,
             ]);
 
-            $output = $this->whoops->handleException($e);
-            $response->getBody()->write($output);
-
-            return $response->withStatus(500);
+            return $this->responder->handle($e, $request, $response);
         }
     }
 }

@@ -1,5 +1,6 @@
 {
     "name": "stratify/error-handler-module",
+    "description": "Error handler module for Stratify",
     "license": "MIT",
     "type": "library",
     "autoload": {
