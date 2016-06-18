@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 use function DI\get;
 use Interop\Container\ContainerInterface;
@@ -19,12 +20,7 @@ return [
         return new ErrorHandlerMiddleware($c->get(ErrorResponder::class), $logger);
     },
 
-    ErrorResponder::class => function (ContainerInterface $c) {
-        if ($c->has('debug') && $c->get('debug') == false) {
-            return new SimpleProductionResponder;
-        }
-        return $c->get(WhoopsResponder::class);
-    },
+    ErrorResponder::class => get(SimpleProductionResponder::class),
 
     WhoopsResponder::class => DI\object()
         ->constructor(get('error_handler.whoops')),
