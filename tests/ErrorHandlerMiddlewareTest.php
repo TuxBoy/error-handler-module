@@ -7,9 +7,6 @@ use Psr\Log\AbstractLogger;
 use Psr\Log\NullLogger;
 use Stratify\ErrorHandlerModule\ErrorHandlerMiddleware;
 use Stratify\ErrorHandlerModule\ErrorResponder\SimpleProductionResponder;
-use Whoops\Run;
-use Zend\Diactoros\Request;
-use Zend\Diactoros\Response;
 use Zend\Diactoros\ServerRequest;
 
 class ErrorHandlerMiddlewareTest extends \PHPUnit_Framework_TestCase
@@ -34,7 +31,7 @@ class ErrorHandlerMiddlewareTest extends \PHPUnit_Framework_TestCase
     public function sets_http_status_to_500()
     {
         $middleware = new ErrorHandlerMiddleware(new SimpleProductionResponder, new NullLogger);
-        $response = $middleware->__invoke(new ServerRequest, new Response, function () {
+        $response = $middleware->__invoke(new ServerRequest, function () {
             throw new \Exception('Hello world');
         });
 
@@ -52,7 +49,26 @@ class ErrorHandlerMiddlewareTest extends \PHPUnit_Framework_TestCase
 
         /** @var ErrorHandlerMiddleware $middleware */
         $middleware = $container->get(ErrorHandlerMiddleware::class);
-        $response = $middleware->__invoke(new ServerRequest, new Response, function () {
+        $response = $middleware->__invoke(new ServerRequest, function () {
+            throw new \Exception('Hello world');
+        });
+
+        $this->assertEquals('Server error', (string) $response->getBody());
+    }
+
+    /**
+     * @test
+     */
+    public function shows_error_page_with_dev_environment()
+    {
+        $containerBuilder = new ContainerBuilder;
+        $containerBuilder->addDefinitions(__DIR__ . '/../res/config/config.php');
+        $containerBuilder->addDefinitions(__DIR__ . '/../res/config/env/dev.php');
+        $container = $containerBuilder->build();
+
+        /** @var ErrorHandlerMiddleware $middleware */
+        $middleware = $container->get(ErrorHandlerMiddleware::class);
+        $response = $middleware->__invoke(new ServerRequest, function () {
             throw new \Exception('Hello world');
         });
 
@@ -75,7 +91,7 @@ class ErrorHandlerMiddlewareTest extends \PHPUnit_Framework_TestCase
         };
 
         $middleware = new ErrorHandlerMiddleware(new SimpleProductionResponder, $logger);
-        $middleware->__invoke(new ServerRequest, new Response, function () {
+        $middleware->__invoke(new ServerRequest, function () {
             throw new \Exception('Hello world');
         });
 

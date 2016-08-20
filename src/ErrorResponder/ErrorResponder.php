@@ -13,9 +13,5 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 interface ErrorResponder
 {
-    public function handle(
-        \Throwable $error,
-        ServerRequestInterface $request,
-        ResponseInterface $response
-    ) : ResponseInterface;
+    public function handle(\Throwable $error, ServerRequestInterface $request) : ResponseInterface;
 }

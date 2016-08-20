@@ -6,13 +6,14 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Stratify\ErrorHandlerModule\ErrorResponder\ErrorResponder;
+use Stratify\Http\Middleware\Middleware;
 
 /**
  * Middleware that catches errors in the next middlewares to display them with a nice error page.
  *
  * @author Matthieu Napoli <matthieu@mnapoli.fr>
  */
-class ErrorHandlerMiddleware
+class ErrorHandlerMiddleware implements Middleware
 {
     /**
      * @var ErrorResponder
@@ -30,20 +31,16 @@ class ErrorHandlerMiddleware
         $this->logger = $logger;
     }
 
-    public function __invoke(
-        ServerRequestInterface $request,
-        ResponseInterface $response,
-        callable $next
-    ) : ResponseInterface
+    public function __invoke(ServerRequestInterface $request, callable $next) : ResponseInterface
     {
         try {
-            return $next($request, $response);
+            return $next($request);
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage(), [
                 'exception' => $e,
             ]);
 
-            return $this->responder->handle($e, $request, $response);
+            return $this->responder->handle($e, $request);
         }
     }
 }

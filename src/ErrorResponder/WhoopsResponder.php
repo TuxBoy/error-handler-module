@@ -6,6 +6,7 @@ namespace Stratify\ErrorHandlerModule\ErrorResponder;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Whoops\Run;
+use Zend\Diactoros\Response\HtmlResponse;
 
 /**
  * Renders a nice error page for developers using Whoops.
@@ -24,16 +25,10 @@ class WhoopsResponder implements ErrorResponder
         $this->whoops = $whoops;
     }
 
-    public function handle(
-        \Throwable $error,
-        ServerRequestInterface $request,
-        ResponseInterface $response
-    ) : ResponseInterface
+    public function handle(\Throwable $error, ServerRequestInterface $request) : ResponseInterface
     {
         $output = $this->whoops->handleException($error);
 
-        $response->getBody()->write($output);
-
-        return $response->withStatus(500);
+        return new HtmlResponse($output, 500);
     }
 }
