@@ -35,7 +35,7 @@ class ErrorHandlerMiddleware implements Middleware
     {
         try {
             return $next($request);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->logger->error($e->getMessage(), [
                 'exception' => $e,
             ]);
