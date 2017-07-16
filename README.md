@@ -12,7 +12,7 @@ composer require stratify/error-handler-module
 
 ```php
 $app = new Application([
-    'error-handler',
+    'stratify/error-handler-module',
 ]);
 ```
 

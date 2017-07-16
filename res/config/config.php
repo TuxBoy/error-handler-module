@@ -2,7 +2,7 @@
 declare(strict_types = 1);
 
 use function DI\get;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Stratify\ErrorHandlerModule\ErrorHandlerMiddleware;
