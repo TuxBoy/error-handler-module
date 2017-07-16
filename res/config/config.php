@@ -22,7 +22,7 @@ return [
 
     ErrorResponder::class => get(SimpleProductionResponder::class),
 
-    WhoopsResponder::class => DI\object()
+    WhoopsResponder::class => DI\create()
         ->constructor(get('error_handler.whoops')),
     'error_handler.whoops' => function () {
         $whoops = new Run();
