@@ -31,9 +31,7 @@ class ErrorHandlerMiddlewareTest extends \PHPUnit_Framework_TestCase
     public function sets_http_status_to_500()
     {
         $middleware = new ErrorHandlerMiddleware(new SimpleProductionResponder, new NullLogger);
-        $response = $middleware->__invoke(new ServerRequest, function () {
-            throw new \Exception('Hello world');
-        });
+        $response = $middleware->process(new ServerRequest, new DelegateThatThrowsAnException);
 
         $this->assertEquals(500, $response->getStatusCode());
     }
@@ -49,9 +47,7 @@ class ErrorHandlerMiddlewareTest extends \PHPUnit_Framework_TestCase
 
         /** @var ErrorHandlerMiddleware $middleware */
         $middleware = $container->get(ErrorHandlerMiddleware::class);
-        $response = $middleware->__invoke(new ServerRequest, function () {
-            throw new \Exception('Hello world');
-        });
+        $response = $middleware->process(new ServerRequest, new DelegateThatThrowsAnException);
 
         $this->assertEquals('Server error', (string) $response->getBody());
     }
@@ -68,9 +64,7 @@ class ErrorHandlerMiddlewareTest extends \PHPUnit_Framework_TestCase
 
         /** @var ErrorHandlerMiddleware $middleware */
         $middleware = $container->get(ErrorHandlerMiddleware::class);
-        $response = $middleware->__invoke(new ServerRequest, function () {
-            throw new \Exception('Hello world');
-        });
+        $response = $middleware->process(new ServerRequest, new DelegateThatThrowsAnException);
 
         $this->assertContains('Error', (string) $response->getBody());
         $this->assertContains('Hello world', (string) $response->getBody());
@@ -91,9 +85,7 @@ class ErrorHandlerMiddlewareTest extends \PHPUnit_Framework_TestCase
         };
 
         $middleware = new ErrorHandlerMiddleware(new SimpleProductionResponder, $logger);
-        $middleware->__invoke(new ServerRequest, function () {
-            throw new \Exception('Hello world');
-        });
+        $middleware->process(new ServerRequest, new DelegateThatThrowsAnException);
 
         $this->assertEquals(['Hello world'], $logger->messages);
     }

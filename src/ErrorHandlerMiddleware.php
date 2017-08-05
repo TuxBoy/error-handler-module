@@ -2,18 +2,19 @@
 
 namespace Stratify\ErrorHandlerModule;
 
+use Interop\Http\ServerMiddleware\DelegateInterface;
+use Interop\Http\ServerMiddleware\MiddlewareInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Stratify\ErrorHandlerModule\ErrorResponder\ErrorResponder;
-use Stratify\Http\Middleware\Middleware;
 
 /**
  * Middleware that catches errors in the next middlewares to display them with a nice error page.
  *
  * @author Matthieu Napoli <matthieu@mnapoli.fr>
  */
-class ErrorHandlerMiddleware implements Middleware
+class ErrorHandlerMiddleware implements MiddlewareInterface
 {
     /**
      * @var ErrorResponder
@@ -31,10 +32,10 @@ class ErrorHandlerMiddleware implements Middleware
         $this->logger = $logger;
     }
 
-    public function __invoke(ServerRequestInterface $request, callable $next) : ResponseInterface
+    public function process(ServerRequestInterface $request, DelegateInterface $delegate) : ResponseInterface
     {
         try {
-            return $next($request);
+            return $delegate->process($request);
         } catch (\Throwable $e) {
             $this->logger->error($e->getMessage(), [
                 'exception' => $e,
